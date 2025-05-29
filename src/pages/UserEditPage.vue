@@ -29,14 +29,29 @@ const onSubmit = async () => {
     return;
   }
   console.log(currentUser,"用户信息");
+  
+  // 处理性别字段的特殊转换
+  let submitValue = editUser.value.currentValue;
+  if (editUser.value.editKey === 'gender') {
+    if (submitValue === '男') {
+      submitValue = 0;
+    } else if (submitValue === '女') {
+      submitValue = 1;
+    } else {
+      showFailToast('性别只能输入：男 或 女');
+      return;
+    }
+  }
+  
   const res = await myAxios.post('/user/update', {
     'id': currentUser.id,
-    [editUser.value.editKey as string]: editUser.value.currentValue
+    [editUser.value.editKey as string]: submitValue
   })
   console.log(res,"修改信息")
   if(res.code === 0 && res.data>0){
     showSuccessToast("修改成功");
-    router.replace('/user');
+    // 移除跳转逻辑，让用户停留在当前编辑页面
+    // router.replace('/user');
   }else {
     showFailToast('修改失败'+res.description);
   }

@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import {userType} from "../models/user";
-import {onMounted, ref, watchEffect} from "vue";
+import {ref, watchEffect} from "vue";
 
 const show = ref(false)
 const userIndex = ref(0)
@@ -78,14 +78,14 @@ watchEffect(()=>{
 .card {
   position: relative;
   margin-bottom: 12px;
-  background-image: url("../assets/bg.png");
+  /* 使用与图片中相似的米色/浅棕色背景 */
+  background-color: #f5f2ea; /* 米色/浅棕色背景 */
   height: 130px;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-color: #ffffff;
   box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.08);
   border-radius: 10px;
-  color: #ffffff;
+  color: #333333; /* 更改文字颜色为深色，以便在浅色背景上更易读 */
 }
 .rightbox {
   padding: 5px 10px;
@@ -98,6 +98,5 @@ watchEffect(()=>{
   font-size: 13px;
   letter-spacing: 3px;
 }
-
 
 </style>
