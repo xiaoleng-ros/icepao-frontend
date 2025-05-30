@@ -50,8 +50,6 @@ const onSubmit = async () => {
   console.log(res,"修改信息")
   if(res.code === 0 && res.data>0){
     showSuccessToast("修改成功");
-    // 移除跳转逻辑，让用户停留在当前编辑页面
-    // router.replace('/user');
   }else {
     showFailToast('修改失败'+res.description);
   }

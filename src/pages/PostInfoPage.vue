@@ -67,13 +67,9 @@ const addCommentPost = ref(0);
 const router = useRouter();
 const route = useRoute();
 
-
-
-
 /**
  * 接收帖子的信息
  */
-
 onMounted(async () => {
   postId.value  = route.query.id;
   console.log("postId",post.value)
@@ -111,11 +107,11 @@ const getPost = async () => {
   }
 };
 
-
 const preAddComment = (postId: number) => {
   show.value = true;
   addCommentPost.value = postId;
 }
+
 /**
  * 给帖子评论
  */
@@ -130,6 +126,7 @@ const doAddComment = async () => {
     showFailToast('评论失败' + (res.description ? `,${res.description}` : ''))
   }
 }
+
 /**
  * 关闭评论
  */
