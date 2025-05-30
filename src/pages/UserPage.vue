@@ -19,7 +19,7 @@
     <van-cell title="修改个人标签" is-link to="/user/update/tags"/>
     <van-cell title="创建的队伍" is-link to="/user/team/create"/>
     <van-cell title="加入的队伍" is-link to="/user/team/join"/>
-    <van-button round type="danger" class="bottom-button" style="margin-left: 30%" @click="logout">退出登录</van-button>
+    <van-button round type="danger" class="bottom-button" style="margin-left: 30%; margin-top: 30px;" @click="logout">退出登录</van-button>
 </template>
 
 <script setup lang="ts">
