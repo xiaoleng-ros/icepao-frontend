@@ -26,68 +26,80 @@
 </template>
 
 <script setup>
-  import {showToast} from "vant";
-  import {useRouter} from "vue-router";
-  import {ref, onMounted, watch} from "vue";
-  import routes from "../config/router.ts";
-  import myAxios from "../plugins/myAxios";
-  import {getCurrentUser} from "../services/user";
+import {useRouter, useRoute} from "vue-router";
+import {ref, onMounted} from "vue";
+import routes from "../config/router.ts";
+import myAxios from "../plugins/myAxios";
+import {getCurrentUser} from "../services/user";
 
-  const router = useRouter();
-  const DEFAULT_TITLE = "伙伴匹配";
-  const title = ref(DEFAULT_TITLE);
-  const unreadCount = ref(0);
+const router = useRouter();
+const route = useRoute();
+const DEFAULT_TITLE = "伙伴匹配";
+const title = ref(DEFAULT_TITLE);
+const unreadCount = ref(0);
 
-  // 获取未读通知数量
-  const getUnreadNoticeCount = async () => {
-    try {
-      const user = await getCurrentUser();
-      if (!user) return;
-      
-      const res = await myAxios.get('/notice/list');
-      if (res?.code === 0 && res?.data) {
-        // 统计未读通知数量（noticeState === 0 表示未读）
-        const unreadNotices = res.data.filter(notice => notice.noticeState === 0);
-        unreadCount.value = unreadNotices.length;
-      }
-    } catch (error) {
-      console.error('获取未读通知数量失败:', error);
+// 获取未读通知数量
+const getUnreadNoticeCount = async () => {
+  try {
+    // 如果当前在登录页面，不执行获取用户信息的操作
+    if (route.path === '/user/login' || route.path === '/user/register') {
+      return;
     }
-  };
-
-  // 监听路由变化，更新标题和未读通知数量
-  router.beforeEach((to, from) => {
-    const toPath = to.path;
-    const route = routes.find((route) => {
-      return toPath == route.path;
-    });
-    title.value = route?.title ?? DEFAULT_TITLE;
     
-    // 当进入通知页面时，刷新未读通知数量
-    if (toPath === '/notice') {
-      setTimeout(() => {
-        getUnreadNoticeCount();
-      }, 500); // 延迟刷新，确保通知页面的操作完成
+    const user = await getCurrentUser();
+    if (!user) return;
+
+    const res = await myAxios.get('/notice/list');
+    if (res?.code === 0 && res?.data) {
+      // 统计未读通知数量（noticeState === 0 表示未读）
+      const unreadNotices = res.data.filter(notice => notice.noticeState === 0);
+      unreadCount.value = unreadNotices.length;
     }
+  } catch (error) {
+    console.error('获取未读通知数量失败:', error);
+  }
+};
+
+// 监听路由变化，更新标题和未读通知数量
+router.beforeEach((to, from) => {
+  const toPath = to.path;
+  const route = routes.find((route) => {
+    return toPath == route.path;
   });
+  title.value = route?.title ?? DEFAULT_TITLE;
 
-  // 组件挂载时获取未读通知数量
-  onMounted(() => {
-    getUnreadNoticeCount();
-    
-    // 定期刷新未读通知数量（可选）
-    setInterval(() => {
+  // 当进入通知页面时，刷新未读通知数量
+  if (toPath === '/notice') {
+    setTimeout(() => {
       getUnreadNoticeCount();
-    }, 30000); // 每30秒刷新一次
-  });
+    }, 500); // 延迟刷新，确保通知页面的操作完成
+  }
+});
 
-  const onClickLeft = () => {
-    router.back();
-  };
+// 组件挂载时获取未读通知数量
+onMounted(() => {
+  // 如果不在登录/注册页面，才获取未读通知数量
+  if (route.path !== '/user/login' && route.path !== '/user/register') {
+    getUnreadNoticeCount();
+  }
 
-  const onClickRight = () => {
-    router.push('/search');
-  };
+  // 定期刷新未读通知数量（可选）
+  setInterval(() => {
+    // 同样需要检查当前路由
+    if (route.path !== '/user/login' && route.path !== '/user/register') {
+      getUnreadNoticeCount();
+    }
+  }, 30000); // 每30秒刷新一次
+});
+
+const onClickLeft = () => {
+  router.back();
+};
+
+const onClickRight = () => {
+  router.push('/search');
+};
+
 </script>
 
 <style scoped>

@@ -29,7 +29,7 @@ import {getCurrentUser} from "../services/user.ts";
 import myAxios from "../plugins/myAxios.ts";
 import {showFailToast, showSuccessToast} from "vant";
 
-const router = new useRouter();
+const router = useRouter();
 const user = ref("");
 onMounted(async () => {
   user.value = await getCurrentUser();

@@ -35,7 +35,7 @@
 import { ref } from 'vue';
 import {useRouter} from "vue-router";
 
-const router = new useRouter();
+const router = useRouter();
 
 const originTagList = [
   {
